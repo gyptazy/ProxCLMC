@@ -1,0 +1,9 @@
+[package]
+name = "proxclmc"
+version = "0.1.0"
+edition = "2021"
+authors = ["Florian Paul Azim Hoberg @gyptazy (gyptazy@gyptazy.com)"]
+license = "GPL-3.0-or-later"
+
+[dependencies]
+ssh2 = "0.9"
