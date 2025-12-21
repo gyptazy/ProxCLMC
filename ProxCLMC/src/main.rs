@@ -15,8 +15,9 @@ use std::fs;
 use std::io;
 use std::io::Read;
 use std::net::TcpStream;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::time::Duration;
+use clap::Parser;
 use ssh2::Session;
 
 #[derive(Debug)]
@@ -25,6 +26,22 @@ struct Node {
     ring0_addr: String,
     cpu: String,
     cpu_type: String,
+}
+
+#[derive(Parser, Debug)]
+#[command(name = "proxclmc")]
+#[command(
+    about = "ProxCLMC - Proxmox CPU Live Migration Checker",
+    long_about = None
+)]
+struct Cli {
+    /// Path to SSH private key
+    #[arg(short, long = "ssh-file", default_value = "/root/.ssh/id_rsa")]
+    ssh_file: PathBuf,
+
+    /// Enable verbose output
+    #[arg(short, long)]
+    verbose: bool,
 }
 
 fn parse_corosync_conf<P: AsRef<Path>>(path: P) -> io::Result<Vec<Node>> {
@@ -40,6 +57,7 @@ fn parse_corosync_conf<P: AsRef<Path>>(path: P) -> io::Result<Vec<Node>> {
 
         match line {
             "nodelist {" => in_nodelist = true,
+
             "node {" if in_nodelist => {
                 in_node = true;
                 current_name = None;
@@ -59,6 +77,7 @@ fn parse_corosync_conf<P: AsRef<Path>>(path: P) -> io::Result<Vec<Node>> {
             }
 
             "}" if in_nodelist => in_nodelist = false,
+
             _ if in_node => {
                 if let Some(v) = line.strip_prefix("name:") {
                     current_name = Some(v.trim().to_string());
@@ -74,19 +93,17 @@ fn parse_corosync_conf<P: AsRef<Path>>(path: P) -> io::Result<Vec<Node>> {
     Ok(nodes)
 }
 
-fn ssh_read_cpuinfo(ip: &str, user: &str) -> Result<String, Box<dyn std::error::Error>> {
+fn ssh_read_cpuinfo(
+    ip: &str,
+    user: &str,
+    ssh_key: &Path,
+) -> Result<String, Box<dyn std::error::Error>> {
     let tcp = TcpStream::connect(format!("{}:22", ip))?;
     tcp.set_read_timeout(Some(Duration::from_secs(5)))?;
     let mut sess = Session::new()?;
     sess.set_tcp_stream(tcp);
     sess.handshake()?;
-
-    sess.userauth_pubkey_file(
-        user,
-        None,
-        Path::new("/root/.ssh/id_rsa"),
-        None,
-    )?;
+    sess.userauth_pubkey_file(user, None, ssh_key, None)?;
 
     if !sess.authenticated() {
         return Err("SSH authentication failed".into());
@@ -113,7 +130,6 @@ fn extract_flags(cpuinfo: &str) -> Vec<String> {
                 .collect();
         }
     }
-
     Vec::new()
 }
 
@@ -130,13 +146,13 @@ impl CpuType {
         let has = |f: &str| flags.iter().any(|x| x == f);
 
         if has("avx512f") {
-            CpuType::V4
+            Self::V4
         } else if has("avx") && has("avx2") {
-            CpuType::V3
+            Self::V3
         } else if has("sse4_2") && has("popcnt") {
-            CpuType::V2
+            Self::V2
         } else {
-            CpuType::V1
+            Self::V1
         }
     }
 
@@ -160,15 +176,18 @@ impl CpuType {
     }
 }
 
-fn enrich_node_cpu_ssh(node: &mut Node, ssh_user: &str) {
-    match ssh_read_cpuinfo(&node.ring0_addr, ssh_user) {
+fn enrich_node_cpu_ssh(
+    node: &mut Node,
+    ssh_user: &str,
+    ssh_key: &Path,
+) {
+    match ssh_read_cpuinfo(&node.ring0_addr, ssh_user, ssh_key) {
         Ok(cpuinfo) => {
             let flags = extract_flags(&cpuinfo);
             let cpu_type = CpuType::from_flags(&flags);
             node.cpu = "remote-detected".to_string();
             node.cpu_type = cpu_type.as_str().to_string();
         }
-
         Err(e) => {
             eprintln!(
                 "Failed to detect CPU on {} ({}): {}",
@@ -188,11 +207,17 @@ fn cluster_min_cpu_type(nodes: &[Node]) -> Option<CpuType> {
 }
 
 fn main() -> io::Result<()> {
-    let path = "/etc/pve/corosync.conf";
-    let mut nodes = parse_corosync_conf(path)?;
+    let args = Cli::parse();
+    let corosync_path = "/etc/pve/corosync.conf";
+    let mut nodes = parse_corosync_conf(corosync_path)?;
+
+    if args.verbose {
+        println!("Using SSH key: {}", args.ssh_file.display());
+        println!("Found {} node(s)", nodes.len());
+    }
 
     for node in &mut nodes {
-        enrich_node_cpu_ssh(node, "root");
+        enrich_node_cpu_ssh(node, "root", &args.ssh_file);
     }
 
     println!("Detected nodes:");
