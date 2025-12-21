@@ -1,0 +1,13 @@
+Source: proxclmc
+Maintainer: Florian Paul Azim Hoberg <gyptazy@gyptazy.com>
+Section: admin
+Priority: optional
+Standards-Version: 4.6.2
+Build-Depends: debhelper-compat (= 13), rustc, cargo
+Rules-Requires-Root: no
+
+Package: proxclmc
+Architecture: amd64
+Depends: ${misc:Depends}
+Description: A lightweight Proxmox VE Cluster CPU Max Compatibility Tool
+ A lightweight tool to determine the maximum CPU compatibility level that is supported across all nodes in a Proxmox VE cluster.

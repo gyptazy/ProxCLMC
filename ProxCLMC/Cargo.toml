@@ -6,4 +6,4 @@ authors = ["Florian Paul Azim Hoberg @gyptazy (gyptazy@gyptazy.com)"]
 license = "GPL-3.0-or-later"
 
 [dependencies]
-ssh2 = "0.9"
+ssh2 = { version = "0.9", features = ["vendored-openssl"] }
