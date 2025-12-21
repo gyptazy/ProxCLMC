@@ -7,3 +7,4 @@ license = "GPL-3.0-or-later"
 
 [dependencies]
 ssh2 = { version = "0.9", features = ["vendored-openssl"] }
+clap = { version = "4", features = ["derive"] }
