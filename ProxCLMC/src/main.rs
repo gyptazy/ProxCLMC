@@ -80,7 +80,13 @@ fn ssh_read_cpuinfo(ip: &str, user: &str) -> Result<String, Box<dyn std::error::
     let mut sess = Session::new()?;
     sess.set_tcp_stream(tcp);
     sess.handshake()?;
-    sess.userauth_agent(user)?;
+
+    sess.userauth_pubkey_file(
+        user,
+        None,
+        Path::new("/root/.ssh/id_rsa"),
+        None,
+    )?;
 
     if !sess.authenticated() {
         return Err("SSH authentication failed".into());
