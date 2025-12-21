@@ -58,7 +58,19 @@ Cluster CPU type: x86-64-v3
 
 ## Install & Usage
 
-**WIP - This will be asap packaged as a Debian package that can be installed immediately on a Proxmox node.**
+```
+wget https://cdn.gyptazy.com/debian/proxclmc/proxclmc_1.0.0_amd64.deb ; dpkg -i proxclmc_1.0.0_amd64.deb ; proxclmc
+```
+
+## Options
+The following cli options are available.
+
+| Short | Long        | Argument     | Default                 | Description        |
+|------:|-------------|--------------|--------------------------|--------------------|
+| `-s`  | `--ssh-file`| `<SSH_FILE>` | `/root/.ssh/id_rsa`      | SSH private key to use |
+|       | `--version` |              |                          | Print version information |
+| `-v`  | `--verbose` |              |                          | Enable verbose output |
+| `-h`  | `--help`    |              |                          | Print help |
 
 
 ## Build
