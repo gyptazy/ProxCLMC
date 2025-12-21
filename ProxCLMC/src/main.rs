@@ -35,11 +35,12 @@ struct Node {
     long_about = None
 )]
 struct Cli {
-    /// Path to SSH private key
     #[arg(short, long = "ssh-file", default_value = "/root/.ssh/id_rsa")]
     ssh_file: PathBuf,
 
-    /// Enable verbose output
+    #[arg(long)]
+    version: bool,
+
     #[arg(short, long)]
     verbose: bool,
 }
@@ -208,12 +209,22 @@ fn cluster_min_cpu_type(nodes: &[Node]) -> Option<CpuType> {
 
 fn main() -> io::Result<()> {
     let args = Cli::parse();
+
+    if args.version {
+        println!("ProxCLMC");
+        println!("Description: A lightweight tool to determine the maximum CPU compatibility level that is supported across all nodes in a Proxmox VE cluster.");
+        println!("Version: 1.0.0");
+        println!("Author: Florian Paul Azim Hoberg @gyptazy <gyptazy@gyptazy.com>");
+        println!("GitHub: https://github.com/gyptazy/ProxCLMC");
+        std::process::exit(0);
+    }
+
     let corosync_path = "/etc/pve/corosync.conf";
     let mut nodes = parse_corosync_conf(corosync_path)?;
 
     if args.verbose {
         println!("Using SSH key: {}", args.ssh_file.display());
-        println!("Found {} node(s)", nodes.len());
+        println!("ProxCLMC version: {}", args.version);
     }
 
     for node in &mut nodes {
