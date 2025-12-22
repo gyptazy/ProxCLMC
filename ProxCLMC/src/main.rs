@@ -160,7 +160,7 @@ impl CpuType {
     fn from_str(s: &str) -> Option<Self> {
         match s {
             "x86-64-v1" => Some(Self::V1),
-            "x86-64-v2" => Some(Self::V2),
+            "x86-64-v2-AES" => Some(Self::V2),
             "x86-64-v3" => Some(Self::V3),
             "x86-64-v4" => Some(Self::V4),
             _ => None,
@@ -170,7 +170,7 @@ impl CpuType {
     fn as_str(&self) -> &'static str {
         match self {
             Self::V1 => "x86-64-v1",
-            Self::V2 => "x86-64-v2",
+            Self::V2 => "x86-64-v2-AES",
             Self::V3 => "x86-64-v3",
             Self::V4 => "x86-64-v4",
         }
@@ -212,7 +212,7 @@ fn main() -> io::Result<()> {
 
     if args.version {
         println!("ProxCLMC");
-        println!("Description: A lightweight tool to determine the maximum CPU compatibility level that is supported across all nodes in a Proxmox VE cluster.");
+        println!("A lightweight tool to determine the maximum CPU compatibility level that is supported across all nodes in a Proxmox VE cluster.");
         println!("Version: 1.0.0");
         println!("Author: Florian Paul Azim Hoberg @gyptazy <gyptazy@gyptazy.com>");
         println!("GitHub: https://github.com/gyptazy/ProxCLMC");
