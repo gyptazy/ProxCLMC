@@ -63,7 +63,7 @@ Cluster CPU type: x86-64-v3
 * SSH Authentication between all PVE nodes
 
 ### Install: Via Debian Repository
-The packaged version for Debian based systems (including Proxmox) are shipped within @gyptazy's Debian repository (which also serves the ProxLB project). The repository can simply be added by running the following commands and installing the Debian package `proxclmc`:
+The packaged version for Debian based systems (including Proxmox) are shipped within [@gyptazy](https://github.com/gyptazy)'s Debian repository (which also serves the ProxLB project). The repository can simply be added by running the following commands and installing the Debian package `proxclmc`:
 ```bash
 echo "deb https://repo.gyptazy.com/stable /" > /etc/apt/sources.list.d/proxlb.list
 wget -O /etc/apt/trusted.gpg.d/proxlb.asc https://repo.gyptazy.com/repository.gpg
@@ -71,7 +71,7 @@ apt-get update && apt-get -y install proxclmc
 ```
 
 ### Install: Via .deb Package
-As an alternative, you can also simply download the Debian package from @gyptazy's CDN and install it afterwards:
+As an alternative, you can also simply download the Debian package from [@gyptazy](https://github.com/gyptazy)'s CDN and install it afterwards:
 ```
 wget https://cdn.gyptazy.com/debian/proxclmc/proxclmc_1.0.0_amd64.deb
 dpkg -i proxclmc_1.0.0_amd64.deb
@@ -111,4 +111,4 @@ This project is licensed under the **GNU General Public License v3.0 or later**.
 SPDX-License-Identifier: `GPL-3.0-or-later`
 
 ## Author
-* Florian Paul Azim Hoberg @gyptazy (https://gyptazy.com)
+* Florian Paul Azim Hoberg [@gyptazy](https://github.com/gyptazy) (https://gyptazy.com)
