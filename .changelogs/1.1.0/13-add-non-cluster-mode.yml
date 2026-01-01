@@ -1,0 +1,2 @@
+added:
+  - Add non cluster mode to also support standalone PVE nodes (@gyptazy). [#13]

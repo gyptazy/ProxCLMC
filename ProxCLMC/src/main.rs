@@ -45,6 +45,10 @@ struct Cli {
     verbose: bool,
 }
 
+fn read_local_cpuinfo() -> io::Result<String> {
+    fs::read_to_string("/proc/cpuinfo")
+}
+
 fn parse_corosync_conf<P: AsRef<Path>>(path: P) -> io::Result<Vec<Node>> {
     let content = fs::read_to_string(path)?;
     let mut nodes = Vec::new();
@@ -209,6 +213,7 @@ fn cluster_min_cpu_type(nodes: &[Node]) -> Option<CpuType> {
 
 fn main() -> io::Result<()> {
     let args = Cli::parse();
+    let corosync_path = Path::new("/etc/pve/corosync.conf");
 
     if args.version {
         println!("ProxCLMC");
@@ -219,7 +224,22 @@ fn main() -> io::Result<()> {
         std::process::exit(0);
     }
 
-    let corosync_path = "/etc/pve/corosync.conf";
+    if !corosync_path.exists() {
+        if args.verbose {
+            println!("No corosync.conf found — running in standalone mode");
+        }
+
+        let cpuinfo = read_local_cpuinfo()?;
+        let flags = extract_flags(&cpuinfo);
+        let cpu_type = CpuType::from_flags(&flags);
+
+        println!("Detected node:");
+        println!("localhost | local | {}", cpu_type.as_str());
+        println!("\nCluster CPU type: {}", cpu_type.as_str());
+
+        return Ok(());
+    }
+
     let mut nodes = parse_corosync_conf(corosync_path)?;
 
     if args.verbose {
