@@ -218,7 +218,7 @@ fn main() -> io::Result<()> {
     if args.version {
         println!("ProxCLMC");
         println!("A lightweight tool to determine the maximum CPU compatibility level that is supported across all nodes in a Proxmox VE cluster.");
-        println!("Version: 1.0.0");
+        println!("Version: 1.1.0");
         println!("Author: Florian Paul Azim Hoberg @gyptazy <gyptazy@gyptazy.com>");
         println!("GitHub: https://github.com/gyptazy/ProxCLMC");
         std::process::exit(0);

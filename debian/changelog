@@ -1,3 +1,9 @@
+proxclmc (1.1.0) stable; urgency=medium
+
+  * Add non cluster mode to also support standalone PVE nodes. (Closes: #13)
+
+ -- Florian Paul Azim Hoberg <gyptazy@gyptazy.com>  Thu, 01 Jan 2026 11:01:13 +0001
+
 proxclmc (1.0.0) stable; urgency=medium
 
   * Initial release of ProxCLMC.
