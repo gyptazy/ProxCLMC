@@ -86,12 +86,13 @@ proxclmc
 ### Options
 The following cli options are available:
 
-| Short | Long        | Argument     | Default                 | Description        |
-|------:|-------------|--------------|--------------------------|--------------------|
-| `-s`  | `--ssh-file`| `<SSH_FILE>` | `/root/.ssh/id_rsa`      | SSH private key to use |
-|       | `--version` |              |                          | Print version information |
-| `-v`  | `--verbose` |              |                          | Enable verbose output |
-| `-h`  | `--help`    |              |                          | Print help |
+| Short | Long          | Argument     | Default                 | Description        |
+|------:|---------------|--------------|--------------------------|--------------------|
+| `-s`  | `--ssh-file`. | `<SSH_FILE>` | `/root/.ssh/id_rsa`      | SSH private key to use |
+|       | `--version`   |              |                          | Print version information |
+| `-l`  | `--list-only` |              |                          | Returns only the desired CPU type on stdout |
+| `-v`  | `--verbose`   |              |                          | Enable verbose output |
+| `-h`  | `--help`      |              |                          | Print help |
 
 ## Building from Source
 Building ProxCLMC is easy and can be done by installing the following requirements for Rust/Cargo:

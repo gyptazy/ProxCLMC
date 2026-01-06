@@ -1,0 +1,2 @@
+added:
+  - Add list only mode to print out desired cpu type to stdout (@gyptazy). [#16]
