@@ -57,6 +57,12 @@ test-pmx02 | 10.10.10.22 | x86-64-v3
 Cluster CPU type: x86-64-v3
 ```
 
+For pipeline integration it can also simply be called with `--list-only` argument to return only the desired CPU type:
+```
+$> proxclmc --list-only
+x86-64-v3
+```
+
 ## Installation
 ### Requirements / Dependencies
 * Proxmox VE Cluster
@@ -73,8 +79,8 @@ apt-get update && apt-get -y install proxclmc
 ### Install: Via .deb Package
 As an alternative, you can also simply download the Debian package from [@gyptazy](https://github.com/gyptazy)'s CDN and install it afterwards:
 ```
-wget https://cdn.gyptazy.com/debian/proxclmc/proxclmc_1.0.0_amd64.deb
-dpkg -i proxclmc_1.0.0_amd64.deb
+wget https://cdn.gyptazy.com/debian/proxclmc/proxclmc_1.2.0_amd64.deb
+dpkg -i proxclmc_1.2.0_amd64.deb
 ```
 
 ### Usage (Run proxclmc)
