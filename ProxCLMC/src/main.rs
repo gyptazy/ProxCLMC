@@ -39,6 +39,9 @@ struct Cli {
     ssh_file: PathBuf,
 
     #[arg(long)]
+    list_only: bool,
+
+    #[arg(long)]
     version: bool,
 
     #[arg(short, long)]
@@ -249,6 +252,13 @@ fn main() -> io::Result<()> {
 
     for node in &mut nodes {
         enrich_node_cpu_ssh(node, "root", &args.ssh_file);
+    }
+
+    if args.list_only {
+        if let Some(cluster_cpu) = cluster_min_cpu_type(&nodes) {
+            println!("{}", cluster_cpu.as_str());
+        }
+        return Ok(());
     }
 
     println!("Detected nodes:");
