@@ -236,6 +236,11 @@ fn main() -> io::Result<()> {
         let flags = extract_flags(&cpuinfo);
         let cpu_type = CpuType::from_flags(&flags);
 
+        if args.list_only {
+            println!("{}", cpu_type.as_str());
+            return Ok(());
+        }
+
         println!("Detected node:");
         println!("localhost | local | {}", cpu_type.as_str());
         println!("\nCluster CPU type: {}", cpu_type.as_str());
